@@ -25,7 +25,7 @@ This will install all required packages including:
 - React 18
 - Tailwind CSS
 - Prisma
-- Stripe
+- Payment
 - NextAuth.js
 - and 40+ other dependencies
 
@@ -60,12 +60,12 @@ NEXTAUTH_SECRET="your-generated-secret-here"
 DATABASE_URL="postgresql://postgres:password@localhost:5432/timeless_luxury?schema=public"
 ```
 
-#### Stripe Keys (for testing)
-Sign up at https://stripe.com and get test keys:
+#### Payment Keys (for testing)
+Sign up at https://Payment.com and get test keys:
 ```env
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_PUBLISHABLE_KEY="pk_test_..."
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+Payment_SECRET_KEY="sk_test_..."
+Payment_PUBLISHABLE_KEY="pk_test_..."
+NEXT_PUBLIC_Payment_PUBLISHABLE_KEY="pk_test_..."
 ```
 
 #### Optional (can configure later)
@@ -266,9 +266,9 @@ npm install
    - Or create via admin panel
    - Or edit `prisma/seed.ts`
 
-4. **Configure Stripe**
-   - Get API keys from https://dashboard.stripe.com
-   - Add webhook endpoint in Stripe Dashboard
+4. **Configure Payment**
+   - Get API keys from https://dashboard.Payment.com
+   - Add webhook endpoint in Payment Dashboard
    - Test checkout flow
 
 5. **Set up email**

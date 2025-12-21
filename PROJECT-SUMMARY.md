@@ -90,8 +90,8 @@ I've built a **production-ready, full-stack luxury artifact e-commerce platform*
    - Product details with related items
    - Cart management (CRUD operations)
    - Order creation & tracking
-   - Checkout with Stripe integration
-   - Stripe webhook handling
+   - Checkout with Payment integration
+   - Payment webhook handling
    - Admin product management
    - Image upload to S3
 
@@ -105,7 +105,7 @@ I've built a **production-ready, full-stack luxury artifact e-commerce platform*
    - Role-based access (CUSTOMER, ADMIN)
 
 3. **Payment Processing**
-   - Stripe integration
+   - Payment integration
    - Payment intent creation
    - Checkout session
    - Webhook for order status updates
@@ -196,7 +196,7 @@ luxury-articles/
 │   │   │   ├── products/        # Product APIs
 │   │   │   ├── orders/          # Order APIs
 │   │   │   ├── checkout/        # Checkout API
-│   │   │   ├── webhooks/        # Stripe webhooks
+│   │   │   ├── webhooks/        # Payment webhooks
 │   │   │   └── admin/           # Admin APIs
 │   │   ├── layout.tsx           # Root layout
 │   │   └── page.tsx             # Homepage
@@ -212,7 +212,7 @@ luxury-articles/
 │   ├── lib/
 │   │   ├── db.ts                # Prisma client
 │   │   ├── auth.ts              # Auth helpers
-│   │   ├── stripe.ts            # Stripe client
+│   │   ├── Payment.ts            # Payment client
 │   │   ├── s3.ts                # AWS S3 client
 │   │   ├── email.ts             # Email service
 │   │   ├── validation.ts        # Zod schemas
@@ -279,7 +279,7 @@ luxury-articles/
 - **Database**: PostgreSQL
 - **ORM**: Prisma
 - **Authentication**: NextAuth.js
-- **Payment**: Stripe
+- **Payment**: Payment
 - **Storage**: AWS S3
 - **Email**: Nodemailer
 - **Validation**: Zod
@@ -392,7 +392,7 @@ npm start
 - Email verification system
 - Password reset flow (ready)
 - Order confirmation emails
-- Stripe webhook handling
+- Payment webhook handling
 - Image upload to S3
 - Admin dashboard foundation
 - SEO meta tags
@@ -484,7 +484,7 @@ This platform is **production-ready** with:
 ✅ Next.js + Tailwind CSS
 ✅ Node.js + Express API
 ✅ PostgreSQL + Prisma
-✅ Stripe payments
+✅ Payments
 ✅ AWS S3 integration
 ✅ Security features
 ✅ Admin panel

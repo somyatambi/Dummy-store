@@ -208,7 +208,7 @@ These are **compile-time warnings only** and **do not affect functionality**. Th
 ## 📝 What's Missing / Optional Enhancements
 
 ### ❌ Not Implemented (Intentionally Skipped)
-- Payment gateway integration (Stripe/Razorpay)
+- Payment gateway integration (Payment/Razorpay)
 - Email notifications (SMTP configured but not used)
 - Actual image uploads (AWS S3/Cloudinary configured but not used)
 

@@ -40,10 +40,10 @@ Edit `.env.local` and update these required values:
 
 NEXTAUTH_SECRET="your-generated-secret-here"
 
-# For Stripe testing (get from https://dashboard.stripe.com/test/apikeys)
-STRIPE_SECRET_KEY="sk_test_your_key"
-STRIPE_PUBLISHABLE_KEY="pk_test_your_key"
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_your_key"
+# For Payment testing (get from https://dashboard.Payment.com/test/apikeys)
+Payment_SECRET_KEY="sk_test_your_key"
+Payment_PUBLISHABLE_KEY="pk_test_your_key"
+NEXT_PUBLIC_Payment_PUBLISHABLE_KEY="pk_test_your_key"
 
 # For AWS S3 (or use Cloudinary)
 AWS_ACCESS_KEY_ID="your-key"
@@ -66,7 +66,7 @@ AWS_S3_BUCKET="your-bucket-name"
 - ✅ Masonry grid for featured products
 - ✅ Product detail pages with image gallery
 - ✅ Shopping cart with real-time updates
-- ✅ Stripe checkout integration
+- ✅ Payment checkout integration
 - ✅ User authentication & registration
 - ✅ Responsive design (mobile, tablet, desktop)
 - ✅ Accessibility (WCAG 2.1 AA)
@@ -76,8 +76,8 @@ AWS_S3_BUCKET="your-bucket-name"
 - ✅ PostgreSQL + Prisma ORM
 - ✅ NextAuth.js authentication
 - ✅ RESTful API routes
-- ✅ Stripe payment processing
-- ✅ Stripe webhook handling
+- ✅ Payment processing
+- ✅ Payment webhook handling
 - ✅ Email notifications
 - ✅ AWS S3 image uploads
 - ✅ Input validation (Zod)
@@ -175,8 +175,8 @@ docker-compose logs -f  # View logs
 
 ## 🎯 Next Steps
 
-1. **Configure Stripe**
-   - Sign up at https://stripe.com
+1. **Configure Payment**
+   - Sign up at https://Payment.com
    - Get test API keys
    - Add webhook endpoint
 
@@ -247,7 +247,7 @@ Built with ❤️ using:
 - Tailwind CSS
 - Prisma
 - PostgreSQL
-- Stripe
+- Payment
 - NextAuth.js
 
 **Enjoy building your luxury artifact store! 🏛️✨**

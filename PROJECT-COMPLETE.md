@@ -127,11 +127,11 @@ All Prisma models complete:
 - ✅ Checkout flow shows payment method selection (Card, UPI, Net Banking, COD)
 - ✅ Orders are created with status "PENDING"
 - ✅ No actual payment processing occurs
-- ⏸️ Stripe integration removed
+- ⏸️ Payment integration removed
 - ⏸️ Razorpay integration not completed
 
 **To implement payment later**:
-1. Choose payment gateway (Stripe, Razorpay, etc.)
+1. Choose payment gateway (Payment, Razorpay, etc.)
 2. Add API keys to `.env.local`
 3. Update `/api/checkout` to create payment intent
 4. Update `/checkout` page to process payment

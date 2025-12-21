@@ -7,7 +7,7 @@
 - ✅ **Product Listings**: Grid layout with filtering
 - ✅ **Product Detail Pages**: Two-column layout with gallery, story, materials
 - ✅ **Shopping Cart**: Add/remove/update items, real-time updates
-- ✅ **Checkout**: Multi-step process with Stripe integration
+- ✅ **Checkout**: Multi-step process with Payment integration
 - ✅ **Order Management**: Create, view, track orders
 
 ### Design & Branding ✅
@@ -33,7 +33,7 @@
 - ✅ **CORS**: Configured for security
 
 ### Payment Integration ✅
-- ✅ **Stripe Payments**: Payment Intent API
+- ✅ **Payments**: Payment Intent API
 - ✅ **Checkout Flow**: Multi-step with shipping info
 - ✅ **Webhook Handler**: Order status updates
 - ✅ **Multiple Shipping Options**: Standard, Express, Overnight
@@ -48,7 +48,7 @@
 - ✅ `DELETE /api/cart/remove/[id]` - Remove item
 
 #### Protected APIs
-- ✅ `POST /api/checkout` - Create Stripe Payment Intent
+- ✅ `POST /api/checkout` - Create Payment Intent
 - ✅ `GET /api/orders` - List user orders
 - ✅ `POST /api/orders` - Create order
 - ✅ `GET /api/orders/[id]` - Order details
@@ -64,7 +64,7 @@
 - ✅ `GET /api/admin/stats` - Dashboard statistics
 
 #### Webhooks
-- ✅ `POST /api/webhooks/stripe` - Stripe event handler
+- ✅ `POST /api/webhooks/Payment` - Payment event handler
 
 ### Admin Dashboard ✅
 - ✅ **Dashboard Page**: Statistics overview
@@ -170,7 +170,7 @@
 - ✅ Node.js (Next.js API routes instead of Express)
 - ✅ PostgreSQL (Neon cloud)
 - ✅ Prisma ORM
-- ✅ Stripe for payments
+- ✅ Payment for payments
 - ✅ AWS S3 (utilities ready)
 
 ### Core Features Requirements ✅
@@ -179,7 +179,7 @@
 - ✅ Product detail page (two-column, gallery, story, Add to Cart)
 - ✅ Zoomable images (basic zoom, can enhance)
 - ✅ Cart API (add/remove/update/view)
-- ✅ Checkout with Stripe Payment Intent
+- ✅ Checkout with Payment Intent
 - ✅ Webhook for order status
 - ✅ Admin panel (APIs complete, basic dashboard UI)
 
@@ -225,7 +225,7 @@
 - ✅ APIs tested and working
 - ✅ Cart functionality fixed and working
 - ✅ Checkout flow complete
-- ✅ Stripe integration ready
+- ✅ Payment integration ready
 - ✅ Admin APIs functional
 - ✅ Docker configuration ready
 - ✅ CI/CD pipeline configured
@@ -254,7 +254,7 @@
 2. **Product Details** - Click any product to see full details
 3. **Add to Cart** - Click "Add to Collection" (working!)
 4. **View Cart** - See all items, update quantities
-5. **Checkout** - Enter shipping, pay with Stripe
+5. **Checkout** - Enter shipping, pay with Payment
 6. **Admin Dashboard** - View statistics at `/admin`
 7. **Admin APIs** - Manage products/orders via API
 

@@ -15,7 +15,7 @@ cp .env.example .env.local
 Edit `.env.local` and add your credentials:
 - Database URL (PostgreSQL)
 - NextAuth secret (generate with: `openssl rand -base64 32`)
-- Stripe keys (from Stripe Dashboard)
+- Payment keys (from Payment Dashboard)
 - AWS S3 credentials (from AWS Console)
 - Email SMTP settings
 
@@ -52,7 +52,7 @@ After seeding:
 - Responsive navigation with cart badge
 - Product listing and detail pages
 - Shopping cart functionality
-- Checkout flow with Stripe
+- Checkout flow with Payment
 - User authentication (login/register)
 - Account dashboard
 - Order history
@@ -62,8 +62,8 @@ After seeding:
 - RESTful API routes
 - NextAuth.js authentication
 - Prisma ORM with PostgreSQL
-- Stripe payment integration
-- Stripe webhook handling
+- Payment integration
+- Payment webhook handling
 - Email notifications
 - AWS S3 image uploads
 - Input validation with Zod
@@ -108,7 +108,7 @@ luxury-articles/
 │   ├── lib/                  # Utilities
 │   │   ├── db.ts            # Prisma client
 │   │   ├── auth.ts          # Auth helpers
-│   │   ├── stripe.ts        # Stripe client
+│   │   ├── Payment.ts        # Payment client
 │   │   ├── s3.ts            # AWS S3 client
 │   │   ├── email.ts         # Email service
 │   │   ├── validation.ts    # Zod schemas
@@ -180,7 +180,7 @@ npm run format
 - `POST /api/admin/upload` - Upload image
 
 ### Webhooks
-- `POST /api/webhooks/stripe` - Stripe events
+- `POST /api/webhooks/Payment` - Payment events
 
 ## Environment Variables
 
@@ -189,9 +189,9 @@ npm run format
 DATABASE_URL="postgresql://..."
 NEXTAUTH_SECRET="generate-random-string"
 NEXTAUTH_URL="http://localhost:3000"
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
+Payment_SECRET_KEY="sk_test_..."
+Payment_PUBLISHABLE_KEY="pk_test_..."
+Payment_WEBHOOK_SECRET="whsec_..."
 ```
 
 ### AWS S3
@@ -244,12 +244,12 @@ docker-compose logs -f
 docker-compose down
 ```
 
-## Stripe Setup
+## Payment Setup
 
-1. Create account at https://stripe.com
+1. Create account at https://Payment.com
 2. Get API keys from Dashboard > Developers > API keys
 3. Set up webhook endpoint:
-   - URL: https://your-domain.com/api/webhooks/stripe
+   - URL: https://your-domain.com/api/webhooks/Payment
    - Events: `payment_intent.succeeded`, `payment_intent.payment_failed`
 4. Copy webhook signing secret to `.env.local`
 
@@ -291,7 +291,7 @@ npm install
 1. **Customize Design**: Update colors in `tailwind.config.js`
 2. **Add More Products**: Use admin panel or seed script
 3. **Configure Email**: Set up SMTP for order confirmations
-4. **Set Up Stripe**: Add your Stripe keys for payments
+4. **Set Up Payment**: Add your Payment keys for payments
 5. **Deploy**: Push to Vercel or your hosting provider
 6. **Add Content**: Create About, Contact, FAQ pages
 7. **SEO**: Add meta tags and sitemap
@@ -310,4 +310,4 @@ MIT License - See LICENSE file
 
 ---
 
-Built with ❤️ using Next.js, React, Tailwind CSS, Prisma, and Stripe
+Built with ❤️ using Next.js, React, Tailwind CSS, Prisma, and Payment

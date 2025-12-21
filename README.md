@@ -18,7 +18,6 @@
 - **Database**: PostgreSQL
 - **ORM**: Prisma
 - **Authentication**: NextAuth.js with JWT
-- **Payment**: Stripe
 - **File Storage**: AWS S3 (configurable to Cloudinary)
 
 ### Security & Infrastructure
@@ -55,7 +54,7 @@
 - ✅ Featured products in asymmetric masonry grid
 - ✅ Detailed product pages with zoomable gallery
 - ✅ Shopping cart with real-time updates
-- ✅ Secure checkout with Stripe
+- ✅ Secure checkout process
 - ✅ User authentication & email verification
 - ✅ Order history & tracking
 - ✅ Responsive design
@@ -71,7 +70,6 @@
 - ✅ SEO optimized with meta tags & JSON-LD
 - ✅ Accessibility (WCAG 2.1 AA compliant)
 - ✅ Rate limiting & security headers
-- ✅ Webhook handling for Stripe events
 - ✅ Database migrations & seeding
 - ✅ Error tracking with Sentry
 - ✅ Environment-based configuration
@@ -83,7 +81,6 @@
 - PostgreSQL 14+
 - Docker & Docker Compose (optional)
 - AWS Account (for S3) or Cloudinary account
-- Stripe Account
 
 ### Installation
 
@@ -149,11 +146,6 @@ DATABASE_URL="postgresql://user:password@localhost:5432/timeless_luxury?schema=p
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="<generate-a-secure-random-string>"
 
-# Stripe
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-
 # AWS S3
 AWS_ACCESS_KEY_ID="your-access-key"
 AWS_SECRET_ACCESS_KEY="your-secret-key"
@@ -216,9 +208,6 @@ See `prisma/schema.prisma` for full schema.
 - `DELETE /api/admin/products/[id]` - Delete product
 - `PUT /api/admin/orders/[id]` - Update order status
 - `POST /api/admin/upload` - Upload images to S3
-
-### Webhooks
-- `POST /api/webhooks/stripe` - Stripe webhook handler
 
 ## Scripts
 
@@ -310,7 +299,6 @@ luxury-articles/
 │   ├── lib/                   # Utility libraries
 │   │   ├── auth.ts           # Authentication helpers
 │   │   ├── db.ts             # Database client
-│   │   ├── stripe.ts         # Stripe client
 │   │   ├── s3.ts             # S3 client
 │   │   └── validation.ts     # Input validation schemas
 │   ├── hooks/                 # Custom React hooks
