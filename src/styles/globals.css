@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Lato', sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-primary/10;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply text-base leading-relaxed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif font-normal tracking-tight;
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h3 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h4 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h5 {
+    @apply text-xl md:text-2xl;
+  }
+
+  h6 {
+    @apply text-lg md:text-xl;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-8 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-primary hover:bg-gold-dark focus:ring-accent;
+  }
+
+  .btn-secondary {
+    @apply bg-primary text-secondary hover:bg-primary/90 focus:ring-primary;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-secondary focus:ring-primary;
+  }
+
+  .container-custom {
+    @apply max-w-8xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .card {
+    @apply bg-white border border-primary/5 transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply hover:shadow-xl hover:border-accent/20;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 bg-white border border-primary/20 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-primary mb-2;
+  }
+
+  /* Masonry grid */
+  .masonry-grid {
+    @apply grid gap-6;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-grid {
+      @apply grid-cols-2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      @apply grid-cols-3;
+    }
+  }
+
+  .masonry-item:nth-child(6n + 1) {
+    @apply md:col-span-2 md:row-span-2;
+  }
+
+  .masonry-item:nth-child(6n + 4) {
+    @apply lg:col-span-2;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fdfbf5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8941f;
+}
+
+/* Selection */
+::selection {
+  background-color: #d4af37;
+  color: #111111;
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
