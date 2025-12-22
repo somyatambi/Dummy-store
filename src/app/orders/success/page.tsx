@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
 function OrderSuccessContent() {
-
-export default function OrderSuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [orderDetails, setOrderDetails] = useState<any>(null);
