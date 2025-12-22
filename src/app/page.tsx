@@ -2,7 +2,8 @@ import Hero from '@/components/home/Hero';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import prisma from '@/lib/db';
 
-export const revalidate = 300; // Revalidate every 5 minutes
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function getFeaturedProducts() {
   return prisma.product.findMany({
