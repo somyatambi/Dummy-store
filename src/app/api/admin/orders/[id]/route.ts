@@ -52,25 +52,7 @@ export async function PUT(
       },
     });
 
-    // Convert Decimal to number
-    const orderWithNumbers = {
-      ...order,
-      totalAmount: Number(order.totalAmount),
-      shippingCost: Number(order.shippingCost),
-      items: order.items.map((item) => ({
-        ...item,
-        price: Number(item.price),
-        product: {
-          ...item.product,
-          price: Number(item.product.price),
-          compareAtPrice: item.product.compareAtPrice
-            ? Number(item.product.compareAtPrice)
-            : null,
-        },
-      })),
-    };
-
-    return success(orderWithNumbers);
+    return success(order);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return handleError(error.errors[0].message, 400);

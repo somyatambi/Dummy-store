@@ -37,4 +37,4 @@ export function sanitizeUser(user: User): UserWithoutPassword {
 }
 
 // Re-export authOptions for use in API routes
-export { authOptions } from '@/app/api/auth/[...nextauth]/route';
+export { authOptions } from '@/lib/auth-config';
