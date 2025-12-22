@@ -1,5 +1,3 @@
-// Prisma schema for Timeless Luxury e-commerce platform
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,20 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-enum UserRole {
-  CUSTOMER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
-  REFUNDED
 }
 
 model User {
@@ -37,40 +21,38 @@ model User {
   resetTokenExpiry  DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-
-  orders    Order[]
-  addresses Address[]
+  addresses         Address[]
+  orders            Order[]
 
   @@index([email])
   @@map("users")
 }
 
 model Product {
-  id             String   @id @default(uuid())
-  name           String
-  slug           String   @unique
-  story          String   @db.Text
-  description    String?  @db.Text
-  category       String?  // Wall Hangings, Lamps, Vases, Showpieces, etc.
-  price          Decimal  @db.Decimal(10, 2)
-  compareAtPrice Decimal? @db.Decimal(10, 2)
-  images         String[] // Array of image URLs
-  materials      String[] // e.g., ["Bronze", "Marble"]
-  dimensions     String? // e.g., "12 x 8 x 6 inches"
-  weight         String? // e.g., "2.5 lbs"
-  stockQuantity  Int      @default(0)
-  sku            String?  @unique
-  featured       Boolean  @default(false)
-  active         Boolean  @default(true)
-  viewCount      Int      @default(0) // Total view count
-  metaTitle      String?
+  id              String        @id @default(uuid())
+  name            String
+  slug            String        @unique
+  story           String
+  description     String?
+  price           Decimal       @db.Decimal(10, 2)
+  compareAtPrice  Decimal?      @db.Decimal(10, 2)
+  images          String[]
+  materials       String[]
+  dimensions      String?
+  weight          String?
+  stockQuantity   Int           @default(0)
+  sku             String?       @unique
+  featured        Boolean       @default(false)
+  active          Boolean       @default(true)
+  metaTitle       String?
   metaDescription String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  cartItems  CartItem[]
-  orderItems OrderItem[]
-  views      ProductView[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  category        String?
+  viewCount       Int           @default(0)
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+  views           ProductView[]
 
   @@index([slug])
   @@index([featured])
@@ -81,12 +63,11 @@ model Product {
 }
 
 model Cart {
-  id        String   @id @default(uuid())
-  userId    String?  @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  items CartItem[]
+  id        String     @id @default(uuid())
+  userId    String?    @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     CartItem[]
 
   @@map("carts")
 }
@@ -98,37 +79,35 @@ model CartItem {
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
   @@map("cart_items")
 }
 
 model Order {
-  id                 String      @id @default(uuid())
-  orderNumber        String      @unique
-  userId             String
-  status             OrderStatus @default(PENDING)
-  subtotal           Decimal     @db.Decimal(10, 2)
-  tax                Decimal     @db.Decimal(10, 2)
-  shippingCost       Decimal     @db.Decimal(10, 2)
-  total              Decimal     @db.Decimal(10, 2)
-  paymentMethod      String?     // card, upi, netbanking, cod
-  stripePaymentId    String?
-  stripePaymentIntent String?    @unique
-  shippingAddressId  String?
-  billingAddressId   String?
-  trackingNumber     String?
-  notes              String?     @db.Text
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-
-  user            User      @relation(fields: [userId], references: [id])
-  items           OrderItem[]
-  shippingAddress Address?  @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
-  billingAddress  Address?  @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  id                  String      @id @default(uuid())
+  orderNumber         String      @unique
+  userId              String
+  status              OrderStatus @default(PENDING)
+  subtotal            Decimal     @db.Decimal(10, 2)
+  tax                 Decimal     @db.Decimal(10, 2)
+  shippingCost        Decimal     @db.Decimal(10, 2)
+  total               Decimal     @db.Decimal(10, 2)
+  stripePaymentId     String?
+  stripePaymentIntent String?     @unique
+  shippingAddressId   String?
+  billingAddressId    String?
+  trackingNumber      String?
+  notes               String?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  paymentMethod       String?
+  items               OrderItem[]
+  billingAddress      Address?    @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  shippingAddress     Address?    @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  user                User        @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([orderNumber])
@@ -141,52 +120,48 @@ model OrderItem {
   orderId   String
   productId String
   quantity  Int
-  price     Decimal  @db.Decimal(10, 2) // Price at time of purchase
+  price     Decimal  @db.Decimal(10, 2)
   subtotal  Decimal  @db.Decimal(10, 2)
   createdAt DateTime @default(now())
-
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
 
   @@map("order_items")
 }
 
 model Address {
-  id         String   @id @default(uuid())
-  userId     String
-  firstName  String
-  lastName   String
-  company    String?
-  address1   String
-  address2   String?
-  city       String
-  state      String
-  postalCode String
-  country    String   @default("US")
-  phone      String?
-  isDefault  Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  shippingOrders  Order[] @relation("ShippingAddress")
-  billingOrders   Order[] @relation("BillingAddress")
+  id             String   @id @default(uuid())
+  userId         String
+  firstName      String
+  lastName       String
+  company        String?
+  address1       String
+  address2       String?
+  city           String
+  state          String
+  postalCode     String
+  country        String   @default("US")
+  phone          String?
+  isDefault      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  billingOrders  Order[]  @relation("BillingAddress")
+  shippingOrders Order[]  @relation("ShippingAddress")
 
   @@index([userId])
   @@map("addresses")
 }
 
-// Analytics Models
 model ProductView {
   id          String   @id @default(uuid())
   productId   String
   productSlug String
   ipAddress   String?
-  userAgent   String?  @db.Text
-  referrer    String?  @db.Text
+  userAgent   String?
+  referrer    String?
   createdAt   DateTime @default(now())
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId])
   @@index([createdAt])
@@ -197,8 +172,8 @@ model PageView {
   id        String   @id @default(uuid())
   path      String
   ipAddress String?
-  userAgent String?  @db.Text
-  referrer  String?  @db.Text
+  userAgent String?
+  referrer  String?
   createdAt DateTime @default(now())
 
   @@index([path])
@@ -207,16 +182,30 @@ model PageView {
 }
 
 model Newsletter {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  firstName   String?
-  lastName    String?
-  subscribed  Boolean  @default(true)
-  source      String?  // "homepage", "checkout", "popup"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  email      String   @unique
+  firstName  String?
+  lastName   String?
+  subscribed Boolean  @default(true)
+  source     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([email])
   @@index([subscribed])
   @@map("newsletters")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
 }

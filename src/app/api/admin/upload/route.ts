@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-config';
-import { uploadToS3 } from '@/lib/s3';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,14 +23,25 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(7);
     const fileExtension = file.name.split('.').pop();
-    const key = `products/${timestamp}-${randomString}.${fileExtension}`;
+    const fileName = `${timestamp}-${randomString}.${fileExtension}`;
 
-    // Upload to S3
-    const url = await uploadToS3(file, key, file.type);
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Save to public/products directory
+    const uploadDir = path.join(process.cwd(), 'public', 'products');
+    await mkdir(uploadDir, { recursive: true });
+    
+    const filePath = path.join(uploadDir, fileName);
+    await writeFile(filePath, buffer);
+
+    // Return public URL
+    const url = `/products/${fileName}`;
 
     return NextResponse.json({
       url,
-      key,
+      fileName,
     });
 
   } catch (error) {
