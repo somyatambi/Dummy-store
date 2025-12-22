@@ -7,7 +7,8 @@ import Link from 'next/link';
 export default function NewProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [images, setImages] = useState<string[]>(['']);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>(['']);
   
   const [formData, setFormData] = useState({
@@ -25,14 +26,40 @@ export default function NewProductPage() {
     active: true,
   });
 
-  const handleImageChange = (index: number, value: string) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setImages(newImages);
-  };
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-  const addImageField = () => {
-    setImages([...images, '']);
+    setUploadingImages(true);
+    const uploadedUrls: string[] = [];
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('file', files[i]);
+
+        const response = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.url) {
+          uploadedUrls.push(result.url);
+        } else {
+          alert(`Failed to upload ${files[i].name}`);
+        }
+      }
+
+      setImages([...images, ...uploadedUrls]);
+      alert(`${uploadedUrls.length} image(s) uploaded successfully!`);
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Failed to upload images');
+    } finally {
+      setUploadingImages(false);
+    }
   };
 
   const removeImageField = (index: number) => {
@@ -209,33 +236,47 @@ export default function NewProductPage() {
           {/* Images */}
           <div className="space-y-4">
             <h2 className="text-xl font-serif border-b pb-2">Images</h2>
-            {images.map((image, index) => (
-              <div key={index} className="flex gap-2">
-                <input
-                  type="url"
-                  value={image}
-                  onChange={(e) => handleImageChange(index, e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
-                />
-                {images.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeImageField(index)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                )}
+            
+            <div>
+              <label className="block text-sm font-medium mb-2">Upload Images</label>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploadingImages}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/90 disabled:opacity-50"
+              />
+              {uploadingImages && (
+                <p className="text-sm text-gray-600 mt-2">Uploading images...</p>
+              )}
+            </div>
+
+            {images.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Uploaded Images ({images.length}):</p>
+                <div className="grid grid-cols-3 gap-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Product ${index + 1}`}
+                        className="w-full h-32 object-cover rounded border border-gray-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImageField(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addImageField}
-              className="px-4 py-2 bg-gray-200 text-primary rounded hover:bg-gray-300"
-            >
-              Add Image URL
-            </button>
+            )}
           </div>
 
           {/* Pricing & Inventory */}
