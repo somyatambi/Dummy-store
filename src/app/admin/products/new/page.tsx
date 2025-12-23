@@ -242,7 +242,7 @@ export default function NewProductPage() {
               <input
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/png, image/jpeg, image/jpg, image/webp"
                 onChange={handleImageUpload}
                 disabled={uploadingImages}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/90 disabled:opacity-50"
