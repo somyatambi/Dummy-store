@@ -73,8 +73,10 @@ export default function ImageZoomModal({
       {/* Previous Button */}
       {images.length > 1 && (
         <button
-          onClick={handlePrevious}
-          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePrevious();
+          }}
           className="absolute left-4 p-3 text-white hover:bg-white/10 rounded-full transition-colors z-10"
           aria-label="Previous image"
         >
