@@ -159,7 +159,7 @@ export default function EditProductPage() {
         stockQuantity: parseInt(formData.stock),
         sku: formData.sku,
         weight: formData.weight ? formData.weight : null,
-        dimensions: formData.dimensions,
+        dimensions: formData.dimensions || null,
         featured: formData.featured,
         active: formData.active,
         images: filteredImages,
@@ -172,12 +172,15 @@ export default function EditProductPage() {
         body: JSON.stringify(productData),
       });
 
+      const result = await response.json();
+      console.log('Update response:', result);
+
       if (response.ok) {
         showToast('Product updated successfully!');
         router.push('/admin/products');
       } else {
-        const error = await response.json();
-        showToast(error.error || 'Failed to update product', 'error');
+        console.error('Update error:', result);
+        showToast(result.error || 'Failed to update product', 'error');
       }
     } catch (error) {
       console.error('Update error:', error);
