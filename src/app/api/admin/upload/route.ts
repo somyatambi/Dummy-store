@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-config';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
@@ -49,15 +48,8 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Save to public/products directory
-    const uploadDir = path.join(process.cwd(), 'public', 'products');
-    await mkdir(uploadDir, { recursive: true });
-    
-    const filePath = path.join(uploadDir, fileName);
-    await writeFile(filePath, buffer);
-
-    // Return public URL
-    const url = `/products/${fileName}`;
+    // Upload to Cloudinary
+    const url = await uploadToCloudinary(buffer, fileName);
 
     return NextResponse.json({
       url,

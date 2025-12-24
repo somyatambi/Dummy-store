@@ -11,7 +11,8 @@ export default function EditProductPage() {
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [images, setImages] = useState<string[]>(['']);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
   const [materials, setMaterials] = useState<string[]>(['']);
   
   const [formData, setFormData] = useState({
@@ -57,7 +58,7 @@ export default function EditProductPage() {
           active: product.active,
         });
         
-        setImages(product.images.length > 0 ? product.images : ['']);
+        setImages(product.images || []);
         setMaterials(product.materials.length > 0 ? product.materials : ['']);
       } else {
         const error = await response.json();
@@ -70,6 +71,42 @@ export default function EditProductPage() {
       router.push('/admin/products');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingImages(true);
+    const uploadedUrls: string[] = [];
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('file', files[i]);
+
+        const response = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.url) {
+          uploadedUrls.push(result.url);
+        } else {
+          alert(`Failed to upload ${files[i].name}`);
+        }
+      }
+
+      setImages([...images, ...uploadedUrls]);
+      alert(`${uploadedUrls.length} image(s) uploaded successfully!`);
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Failed to upload images');
+    } finally {
+      setUploadingImages(false);
     }
   };
 
@@ -215,34 +252,49 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Description *</label>
-              <textarea
-                required
-                rows={4}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
+              <label className="block text-sm font-medium mb-2">Upload Images</label>
+              <input
+                type="file"
+                multiple
+                accept="image/png, image/jpeg, image/jpg, image/webp"
+                onChange={handleImageUpload}
+                disabled={uploadingImages}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/90 disabled:opacity-50"
               />
+              {uploadingImages && (
+                <p className="text-sm text-gray-600 mt-2">Uploading images...</p>
+              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Story</label>
-              <textarea
-                rows={4}
-                value={formData.story}
-                onChange={(e) => setFormData({ ...formData, story: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          {/* Images */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-serif border-b pb-2">Images</h2>
+            {images.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Uploaded Images ({images.length}):</p>
+                <div className="grid grid-cols-3 gap-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Product ${index + 1}`}
+                        className="w-full h-32 object-cover rounded border border-gray-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImageField(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             {images.map((image, index) => (
               <div key={index} className="flex gap-2">
                 <input
-                  type="url"
+                  type="text"
                   value={image}
                   onChange={(e) => handleImageChange(index, e.target.value)}
                   placeholder="https://example.com/image.jpg"
