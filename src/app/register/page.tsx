@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -54,7 +56,7 @@ export default function RegisterPage() {
       }
 
       // Show success message
-      alert('Registration successful! Please check your email to verify your account.');
+      showToast('Registration successful! Please check your email to verify your account.');
       router.push('/login');
     } catch (err: any) {
       setError(err.message || 'An error occurred. Please try again.');

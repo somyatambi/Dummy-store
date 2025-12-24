@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useCart } from '@/hooks/useCart';
 import Image from 'next/image';
+import { useToast } from '@/components/ui/Toast';
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
   const { cart, isLoading } = useCart();
   const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -48,7 +50,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     if (!selectedPaymentMethod) {
-      alert('Please select a payment method');
+      showToast('Please select a payment method', 'error');
       return;
     }
 
@@ -89,7 +91,7 @@ export default function CheckoutPage() {
       router.push(`/orders/success?orderId=${data.data.order.id}`);
     } catch (error: any) {
       console.error('Order creation error:', error);
-      alert(error.message || 'Failed to create order');
+      showToast(error.message || 'Failed to create order', 'error');
     } finally {
       setIsCreatingPayment(false);
     }

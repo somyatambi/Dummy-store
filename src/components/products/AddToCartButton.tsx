@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/components/ui/Toast';
 
 interface AddToCartButtonProps {
   productId: string;
@@ -15,13 +16,14 @@ export default function AddToCartButton({ productId, disabled = false }: AddToCa
   const [error, setError] = useState('');
   const { addToCart } = useCart();
   const { data: session } = useSession();
+  const { showToast } = useToast();
 
   const handleAddToCart = async () => {
     setIsAdding(true);
     setError('');
     try {
       await addToCart(productId, 1);
-      alert('Added to cart!');
+      showToast('Added to cart!');
     } catch (error: any) {
       console.error('Failed to add to cart:', error);
       const errorMessage = error?.message || 'Failed to add to cart. Please try again.';
@@ -32,7 +34,7 @@ export default function AddToCartButton({ productId, disabled = false }: AddToCa
         setError(errorMessage);
       }
       
-      alert(errorMessage);
+      showToast(errorMessage, 'error');
     } finally {
       setIsAdding(false);
     }

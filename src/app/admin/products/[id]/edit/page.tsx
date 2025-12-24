@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
+import { PRODUCT_CATEGORIES } from '@/lib/constants';
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -62,12 +64,12 @@ export default function EditProductPage() {
         setMaterials(product.materials.length > 0 ? product.materials : ['']);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to load product');
+        showToast(error.error || 'Failed to load product', 'error');
         router.push('/admin/products');
       }
     } catch (error) {
-      console.error('Failed to load product:', error);
-      alert('Failed to load product');
+      console.error('Error loading product:', error);
+      showToast('Failed to load product', 'error');
       router.push('/admin/products');
     } finally {
       setIsLoading(false);
@@ -96,15 +98,15 @@ export default function EditProductPage() {
         if (response.ok && result.url) {
           uploadedUrls.push(result.url);
         } else {
-          alert(`Failed to upload ${files[i].name}`);
+          showToast(`Failed to upload ${files[i].name}`, 'error');
         }
       }
 
       setImages([...images, ...uploadedUrls]);
-      alert(`${uploadedUrls.length} image(s) uploaded successfully!`);
+      showToast(`${uploadedUrls.length} image(s) uploaded successfully!`);
     } catch (error) {
       console.error('Error uploading images:', error);
-      alert('Failed to upload images');
+      showToast('Failed to upload images', 'error');
     } finally {
       setUploadingImages(false);
     }
@@ -169,15 +171,15 @@ export default function EditProductPage() {
       });
 
       if (response.ok) {
-        alert('Product updated successfully!');
+        showToast('Product updated successfully!');
         router.push('/admin/products');
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to update product');
+        showToast(error.error || 'Failed to update product', 'error');
       }
     } catch (error) {
       console.error('Update error:', error);
-      alert('Failed to update product');
+      showToast('Failed to update product', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -238,16 +240,11 @@ export default function EditProductPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
               >
                 <option value="">Select a category</option>
-                <option value="Wall Hangings">Wall Hangings</option>
-                <option value="Lamps">Lamps</option>
-                <option value="Vases">Vases</option>
-                <option value="Showpieces">Showpieces</option>
-                <option value="Sculptures">Sculptures</option>
-                <option value="Clocks">Clocks</option>
-                <option value="Mirrors">Mirrors</option>
-                <option value="Candle Holders">Candle Holders</option>
-                <option value="Photo Frames">Photo Frames</option>
-                <option value="Spiritual">Spiritual</option>
+                {PRODUCT_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
 

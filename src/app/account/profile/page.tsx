@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,12 +56,12 @@ export default function ProfilePage() {
       });
 
       if (response.ok) {
-        alert('Profile updated successfully!');
+        showToast('Profile updated successfully!');
       } else {
-        alert('Failed to update profile');
+        showToast('Failed to update profile', 'error');
       }
     } catch (error) {
-      alert('Failed to update profile');
+      showToast('Failed to update profile', 'error');
     } finally {
       setIsUpdating(false);
     }
@@ -69,12 +71,12 @@ export default function ProfilePage() {
     e.preventDefault();
 
     if (formData.newPassword !== formData.confirmPassword) {
-      alert('New passwords do not match');
+      showToast('New passwords do not match', 'error');
       return;
     }
 
     if (formData.newPassword.length < 6) {
-      alert('Password must be at least 6 characters');
+      showToast('Password must be at least 6 characters', 'error');
       return;
     }
 
@@ -91,7 +93,7 @@ export default function ProfilePage() {
       });
 
       if (response.ok) {
-        alert('Password changed successfully!');
+        showToast('Password changed successfully!');
         setFormData(prev => ({
           ...prev,
           currentPassword: '',
@@ -100,10 +102,10 @@ export default function ProfilePage() {
         }));
       } else {
         const data = await response.json();
-        alert(data.message || 'Failed to change password');
+        showToast(data.message || 'Failed to change password', 'error');
       }
     } catch (error) {
-      alert('Failed to change password');
+      showToast('Failed to change password', 'error');
     } finally {
       setIsUpdating(false);
     }

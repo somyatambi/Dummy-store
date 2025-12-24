@@ -7,6 +7,7 @@ import Footer from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/Toaster';
 import { CartProvider } from '@/hooks/useCart';
 import { Providers } from '@/components/Providers';
+import { ToastProvider } from '@/components/ui/Toast';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -56,12 +57,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cn(playfair.variable, lato.variable)}>
       <body className="font-sans bg-secondary text-primary antialiased">
         <Providers>
-          <CartProvider>
-            <Header />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
-            <Toaster />
-          </CartProvider>
+          <ToastProvider>
+            <CartProvider>
+              <Header />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+              <Toaster />
+            </CartProvider>
+          </ToastProvider>
         </Providers>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
 
 interface Order {
   id: string;
@@ -22,6 +23,7 @@ interface Order {
 export default function AdminOrdersPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
@@ -63,13 +65,13 @@ export default function AdminOrdersPage() {
       });
 
       if (response.ok) {
-        alert('Order status updated successfully');
+        showToast('Order status updated successfully');
         fetchOrders();
       } else {
-        alert('Failed to update order status');
+        showToast('Failed to update order status', 'error');
       }
     } catch (error) {
-      alert('Failed to update order status');
+      showToast('Failed to update order status', 'error');
     }
   };
 

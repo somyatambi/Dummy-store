@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
+import { PRODUCT_CATEGORIES } from '@/lib/constants';
 
 export default function NewProductPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [images, setImages] = useState<string[]>([]);
@@ -48,15 +51,15 @@ export default function NewProductPage() {
         if (response.ok && result.url) {
           uploadedUrls.push(result.url);
         } else {
-          alert(`Failed to upload ${files[i].name}`);
+          showToast(`Failed to upload ${files[i].name}`, 'error');
         }
       }
 
       setImages([...images, ...uploadedUrls]);
-      alert(`${uploadedUrls.length} image(s) uploaded successfully!`);
+      showToast(`${uploadedUrls.length} image(s) uploaded successfully!`);
     } catch (error) {
       console.error('Error uploading images:', error);
-      alert('Failed to upload images');
+      showToast('Failed to upload images', 'error');
     } finally {
       setUploadingImages(false);
     }
@@ -137,14 +140,14 @@ export default function NewProductPage() {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Product created successfully!');
+        showToast('Product created successfully!');
         router.push('/admin/products');
       } else {
-        alert(result.error || 'Failed to create product');
+        showToast(result.error || 'Failed to create product', 'error');
       }
     } catch (error) {
       console.error('Error creating product:', error);
-      alert('Failed to create product. Please check your input.');
+      showToast('Failed to create product. Please check your input.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -197,16 +200,11 @@ export default function NewProductPage() {
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
               >
                 <option value="">Select a category</option>
-                <option value="Wall Hangings">Wall Hangings</option>
-                <option value="Lamps">Lamps</option>
-                <option value="Vases">Vases</option>
-                <option value="Showpieces">Showpieces</option>
-                <option value="Sculptures">Sculptures</option>
-                <option value="Clocks">Clocks</option>
-                <option value="Mirrors">Mirrors</option>
-                <option value="Candle Holders">Candle Holders</option>
-                <option value="Photo Frames">Photo Frames</option>
-                <option value="Spiritual">Spiritual</option>
+                {PRODUCT_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
 

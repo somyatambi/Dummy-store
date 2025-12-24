@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useToast } from '@/components/ui/Toast';
 
 interface Product {
   id: string;
@@ -21,6 +22,7 @@ interface Product {
 export default function AdminProductsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { showToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,14 +61,14 @@ export default function AdminProductsPage() {
       });
 
       if (response.ok) {
-        alert('Product deleted successfully');
+        showToast('Product deleted successfully');
         fetchProducts();
       } else {
         const data = await response.json();
-        alert(data.message || 'Failed to delete product');
+        showToast(data.message || 'Failed to delete product', 'error');
       }
     } catch (error) {
-      alert('Failed to delete product');
+      showToast('Failed to delete product', 'error');
     }
   };
 
@@ -82,7 +84,7 @@ export default function AdminProductsPage() {
         fetchProducts();
       }
     } catch (error) {
-      alert('Failed to update product');
+      showToast('Failed to update product', 'error');
     }
   };
 

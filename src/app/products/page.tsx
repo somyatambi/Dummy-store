@@ -4,20 +4,9 @@ import { useState, useEffect } from 'react';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Product } from '@prisma/client';
 import { ProductGridSkeleton } from '@/components/ui/Skeletons';
+import { PRODUCT_CATEGORIES } from '@/lib/constants';
 
-const CATEGORIES = [
-  'All Products',
-  'Wall Hangings',
-  'Lamps',
-  'Vases & Planters',
-  'Showpieces',
-  'Candles & Holders',
-  'Mirrors & Frames',
-  'Clocks',
-  'Storage & Organization',
-  'Tabletop Decor',
-  'Wind Chimes',
-];
+const CATEGORIES = ['All Products', ...PRODUCT_CATEGORIES];
 
 interface ProductWithNumbers extends Omit<Product, 'price' | 'compareAtPrice'> {
   price: number;
