@@ -10,6 +10,7 @@ export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params?.id as string;
+  const { showToast } = useToast();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -151,6 +152,7 @@ export default function EditProductPage() {
       const productData = {
         name: formData.name,
         slug: formData.slug,
+        category: formData.category,
         description: formData.description,
         story: formData.story,
         price: parseFloat(formData.price),
@@ -246,6 +248,28 @@ export default function EditProductPage() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Description *</label>
+              <textarea
+                required
+                rows={4}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Story (optional)</label>
+              <textarea
+                rows={4}
+                value={formData.story}
+                onChange={(e) => setFormData({ ...formData, story: e.target.value })}
+                placeholder="Share the unique story behind this product..."
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent focus:border-transparent"
+              />
             </div>
 
             <div>

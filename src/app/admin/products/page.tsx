@@ -53,7 +53,8 @@ export default function AdminProductsPage() {
   };
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+    const confirmed = window.confirm(`Are you sure you want to delete "${name}"?`);
+    if (!confirmed) return;
 
     try {
       const response = await fetch(`/api/admin/products/${id}`, {
