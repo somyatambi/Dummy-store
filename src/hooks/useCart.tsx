@@ -27,6 +27,7 @@ interface CartContextType {
   updateCartItem: (itemId: string, quantity: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   refreshCart: () => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -41,7 +42,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const addToCart = async (productId: string, quantity: number) => {
-    setIsLoading(true);
     try {
       const res = await fetch('/api/cart/add', {
         method: 'POST',
@@ -55,13 +55,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data.error || 'Failed to add to cart');
       }
       
-      // The API returns the updated cart directly
-      await mutate();
+      // Revalidate cart in background
+      mutate();
     } catch (error) {
       console.error('Add to cart error:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -124,6 +122,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const clearCart = () => {
+    mutate(null, false);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -133,6 +135,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateCartItem,
         removeFromCart,
         refreshCart: mutate,
+        clearCart,
       }}
     >
       {children}

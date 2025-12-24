@@ -109,15 +109,6 @@ export default function LoginPage() {
                 Forgot your password?
               </Link>
             </div>
-
-            {/* Test Credentials */}
-            <div className="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <p className="text-sm font-medium text-amber-900 mb-2">Test Credentials:</p>
-              <div className="space-y-1 text-sm text-amber-800">
-                <p><strong>Admin:</strong> admin@timelessluxury.com / admin123</p>
-                <p><strong>Customer:</strong> customer@example.com / customer123</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

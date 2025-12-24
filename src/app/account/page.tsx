@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useCart } from '@/hooks/useCart';
 import { 
   ShoppingBagIcon, 
   UserCircleIcon, 
@@ -15,6 +16,7 @@ import {
 export default function AccountPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { clearCart } = useCart();
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -25,6 +27,7 @@ export default function AccountPage() {
   }, [session, status, router]);
 
   const handleSignOut = async () => {
+    clearCart();
     await signOut({ redirect: true, callbackUrl: '/' });
   };
 

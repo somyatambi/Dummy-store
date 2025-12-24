@@ -17,30 +17,30 @@ export async function POST(request: NextRequest) {
     // Check if user is authenticated
     const session = await getServerSession();
     
-    // If user is logged in, check email verification
-    if (session?.user?.email) {
-      const user = await prisma.user.findUnique({
+    // Parallel queries for better performance
+    const [product, user] = await Promise.all([
+      prisma.product.findUnique({
+        where: { id: productId },
+        select: { id: true, stockQuantity: true, active: true, name: true, price: true, images: true },
+      }),
+      session?.user?.email ? prisma.user.findUnique({
         where: { email: session.user.email },
-        select: { emailVerified: true, email: true },
-      });
+        select: { emailVerified: true },
+      }) : Promise.resolve(null)
+    ]);
 
-      if (user && !user.emailVerified) {
-        return NextResponse.json(
-          { 
-            error: 'Please verify your email before adding items to cart',
-            code: 'EMAIL_NOT_VERIFIED'
-          },
-          { status: 403 }
-        );
-      }
+    // If user is logged in, check email verification
+    if (user && !user.emailVerified) {
+      return NextResponse.json(
+        { 
+          error: 'Please verify your email before adding items to cart',
+          code: 'EMAIL_NOT_VERIFIED'
+        },
+        { status: 403 }
+      );
     }
 
     // Verify product exists and is in stock
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-      select: { id: true, stockQuantity: true, active: true },
-    });
-
     if (!product || !product.active) {
       return NextResponse.json(
         { error: 'Product not found or inactive' },
@@ -62,44 +62,31 @@ export async function POST(request: NextRequest) {
 
     // Find or create cart
     let cart = await prisma.cart.findFirst({
-      where: { userId: sessionId }, // Using sessionId as userId for guest carts
+      where: { userId: sessionId },
       include: {
         items: {
-          include: {
-            product: true,
-          },
+          where: { productId },
+          take: 1,
         },
       },
     });
 
     if (!cart) {
       cart = await prisma.cart.create({
-        data: {
-          userId: sessionId,
-        },
-        include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
-        },
+        data: { userId: sessionId },
+        include: { items: true },
       });
     }
 
-    // Check if item already exists in cart
-    const existingItem = cart.items.find((item) => item.productId === productId);
-
+    // Upsert cart item (update if exists, create if not)
+    const existingItem = cart.items[0];
+    
     if (existingItem) {
-      // Update quantity
       await prisma.cartItem.update({
         where: { id: existingItem.id },
-        data: {
-          quantity: existingItem.quantity + quantity,
-        },
+        data: { quantity: { increment: quantity } },
       });
     } else {
-      // Add new item
       await prisma.cartItem.create({
         data: {
           cartId: cart.id,
@@ -109,28 +96,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Fetch updated cart
-    const updatedCart = await prisma.cart.findUnique({
-      where: { id: cart.id },
-      include: {
-        items: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                price: true,
-                images: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
+    // Return simplified response - let client refetch cart
     const response = NextResponse.json({
       success: true,
-      cart: updatedCart,
+      message: 'Item added to cart',
     });
 
     // Set session cookie
