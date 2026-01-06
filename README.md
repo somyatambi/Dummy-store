@@ -21,11 +21,13 @@
 - **File Storage**: AWS S3 (configurable to Cloudinary)
 
 ### Security & Infrastructure
-- **Password Hashing**: bcrypt
-- **Security Headers**: Helmet
-- **Rate Limiting**: express-rate-limit
-- **CORS**: cors middleware
-- **Input Validation**: Zod
+- **Password Hashing**: bcrypt (12 rounds)
+- **Rate Limiting**: Custom implementation (in-memory)
+- **CSRF Protection**: Token-based validation
+- **Security Headers**: CSP, X-Frame-Options, HSTS
+- **Session Management**: JWT with auto-refresh
+- **Input Validation**: Zod schemas
+- **Environment Validation**: Runtime checks
 - **Email**: Nodemailer
 - **Monitoring**: Sentry
 - **Analytics**: Google Analytics
@@ -96,11 +98,29 @@
    ```
 
 3. **Set up environment variables**
+   
+   **Quick Setup (Recommended):**
    ```bash
-   cp .env.example .env.local
+   # Windows PowerShell
+   .\setup-security.ps1
+   
+   # Linux/Mac
+   chmod +x setup-security.sh
+   ./setup-security.sh
    ```
    
-   Fill in the required environment variables (see Environment Variables section below)
+   **Manual Setup:**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Then generate a secure secret and update `.env`:
+   ```bash
+   # Generate NEXTAUTH_SECRET (32+ characters)
+   openssl rand -base64 32
+   ```
+   
+   Fill in the required environment variables (see [SECURITY-IMPLEMENTATION.md](SECURITY-IMPLEMENTATION.md))
 
 4. **Set up the database**
    ```bash
@@ -136,43 +156,39 @@ docker-compose down
 
 ## Environment Variables
 
-Create a `.env.local` file with the following variables:
+See [`.env.example`](.env.example) for a complete list of configuration options.
 
+**Required Variables:**
 ```env
-# Database
 DATABASE_URL="postgresql://user:password@localhost:5432/timeless_luxury?schema=public"
-
-# NextAuth
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="<generate-a-secure-random-string>"
-
-# AWS S3
-AWS_ACCESS_KEY_ID="your-access-key"
-AWS_SECRET_ACCESS_KEY="your-secret-key"
-AWS_REGION="us-east-1"
-AWS_S3_BUCKET="timeless-luxury-images"
-
-# Alternative: Cloudinary
-# CLOUDINARY_CLOUD_NAME="your-cloud-name"
-# CLOUDINARY_API_KEY="your-api-key"
-# CLOUDINARY_API_SECRET="your-api-secret"
-
-# Email (for verification)
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT="587"
-SMTP_USER="your-email@gmail.com"
-SMTP_PASSWORD="your-app-password"
-EMAIL_FROM="noreply@timelessluxury.com"
-
-# Sentry (Error Tracking)
-NEXT_PUBLIC_SENTRY_DSN="your-sentry-dsn"
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
-
-# Admin
-ADMIN_EMAIL="admin@timelessluxury.com"
+NEXTAUTH_SECRET="<generate-with-openssl-rand-base64-32>"
 ```
+
+**Optional but Recommended:**
+- Image storage (AWS S3 or Cloudinary)
+- Email service (SMTP)
+- Error tracking (Sentry)
+- Analytics (Google Analytics)
+
+For detailed configuration, see:
+- [SECURITY-IMPLEMENTATION.md](SECURITY-IMPLEMENTATION.md) - Security setup guide
+- [.env.example](.env.example) - All available variables
+
+## 🔒 Security Features
+
+This application implements enterprise-grade security:
+
+- ✅ **Rate Limiting** - Protects against brute force and DDoS
+- ✅ **CSRF Protection** - Token-based validation for state changes
+- ✅ **Security Headers** - CSP, XSS protection, clickjacking prevention
+- ✅ **Session Security** - 24-hour timeout with auto-refresh
+- ✅ **Input Validation** - Zod schemas for all inputs
+- ✅ **Environment Validation** - Runtime checks for critical configs
+- ✅ **Password Security** - bcrypt with 12 salt rounds
+- ✅ **SQL Injection Protection** - Prisma ORM parameterized queries
+
+**See [SECURITY-IMPLEMENTATION.md](SECURITY-IMPLEMENTATION.md) for complete security documentation.**
 
 ## Database Schema
 
