@@ -141,14 +141,10 @@ Secure containerization practices.
 - [ ] **Configure HTTPS/SSL certificate**
 - [ ] **Set NODE_ENV=production**
 - [ ] **Review and update Content-Security-Policy for your domains**
-- [ ] **Enable monitoring (Sentry, logging)**
 
 ### Recommended
 
 - [ ] Set up database backups
-- [ ] Configure email service (SMTP)
-- [ ] Set up error tracking (Sentry)
-- [ ] Configure payment gateway (Stripe)
 - [ ] Enable rate limiting on infrastructure level (Cloudflare, AWS WAF)
 - [ ] Set up DDoS protection
 - [ ] Regular security audits

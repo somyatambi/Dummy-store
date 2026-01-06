@@ -88,9 +88,6 @@ All critical security vulnerabilities have been addressed. Your application is n
 - [ ] Set `NODE_ENV=production`
 - [ ] Configure production database
 - [ ] Set up HTTPS/SSL certificate
-- [ ] Configure email service (SMTP)
-- [ ] Set up Stripe for payments
-- [ ] Enable error tracking (Sentry)
 
 ### 3. Test Security Features
 ```bash

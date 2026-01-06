@@ -28,13 +28,9 @@
 - **Session Management**: JWT with auto-refresh
 - **Input Validation**: Zod schemas
 - **Environment Validation**: Runtime checks
-- **Email**: Nodemailer
-- **Monitoring**: Sentry
-- **Analytics**: Google Analytics
 
 ### DevOps
 - **Containerization**: Docker & Docker Compose
-- **CI/CD**: GitHub Actions
 - **Deployment**: Vercel (configured)
 - **Testing**: Jest + React Testing Library
 
@@ -64,16 +60,14 @@
 ### Admin Features
 - ✅ Product management (CRUD)
 - ✅ Order management & status updates
-- ✅ Image upload to S3
 - ✅ Inventory tracking
 - ✅ Analytics dashboard
 
 ### Technical Features
-- ✅ SEO optimized with meta tags & JSON-LD
-- ✅ Accessibility (WCAG 2.1 AA compliant)
+- ✅ SEO optimized with meta tags
+- ✅ Responsive design (mobile-first)
 - ✅ Rate limiting & security headers
 - ✅ Database migrations & seeding
-- ✅ Error tracking with Sentry
 - ✅ Environment-based configuration
 
 ## Getting Started
@@ -165,12 +159,6 @@ NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="<generate-with-openssl-rand-base64-32>"
 ```
 
-**Optional but Recommended:**
-- Image storage (AWS S3 or Cloudinary)
-- Email service (SMTP)
-- Error tracking (Sentry)
-- Analytics (Google Analytics)
-
 For detailed configuration, see:
 - [SECURITY-IMPLEMENTATION.md](SECURITY-IMPLEMENTATION.md) - Security setup guide
 - [.env.example](.env.example) - All available variables
@@ -223,7 +211,6 @@ See `prisma/schema.prisma` for full schema.
 - `PUT /api/admin/products/[id]` - Update product
 - `DELETE /api/admin/products/[id]` - Delete product
 - `PUT /api/admin/orders/[id]` - Update order status
-- `POST /api/admin/upload` - Upload images to S3
 
 ## Scripts
 

@@ -108,23 +108,17 @@ CREATE TABLE newsletters (
 
 ## 🚀 How to Use Newsletter System
 
-### For Admin (Sending Offers):
+### For Admin:
 1. Export subscriber list from database:
    ```sql
    SELECT email, firstName FROM newsletters WHERE subscribed = true;
    ```
 
-2. Send emails via:
-   - **Mailchimp** (recommended - free up to 500 subscribers)
-   - **SendGrid** (500 emails/day free)
-   - **Brevo** (300 emails/day free)
-
-3. Or integrate email service later for automatic sending
+2. Use exported list with your preferred email service
 
 ### For Customers:
 - Subscribe on homepage via newsletter form
-- Automatically get updates when you send campaigns
-- Can unsubscribe via link in emails
+- Unsubscribe via API endpoint
 
 ---
 
@@ -134,20 +128,15 @@ CREATE TABLE newsletters (
 1. User registers with email
 2. `emailVerified` = false by default
 3. System generates `verificationToken`
-4. Sends verification email (to be implemented)
-5. User clicks link → email verified
-6. Can now add items to cart
+4. Admin can manually verify users in database:
+   ```sql
+   UPDATE users SET emailVerified = true WHERE email = 'user@example.com';
+   ```
+5. Can now add items to cart
 
 ### Current Status:
-- ⚠️ **Email sending not implemented yet** (needs SMTP/SendGrid)
-- Admin can manually verify users in database for testing:
-  ```sql
-  UPDATE users SET emailVerified = true WHERE email = 'user@example.com';
-  ```
-
----
-
-## 🎯 Next Steps for Full Email System
+- Email verification required for cart actions
+- Manual verification through database
 
 ### 1. Choose Email Service:
 - **Resend** (recommended - 3000 free/month, developer-friendly)
