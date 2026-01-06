@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { handleError, success } from '@/lib/api-utils';
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
+import { strictRateLimit } from '@/lib/rate-limit';
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -14,6 +15,9 @@ const registerSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const rateLimitResult = await strictRateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
   try {
     const body = await request.json();
     const validatedData = registerSchema.parse(body);

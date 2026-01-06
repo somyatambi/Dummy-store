@@ -3,9 +3,13 @@ import { getServerSession } from 'next-auth';
 import prisma from '@/lib/db';
 import { handleError, success } from '@/lib/api-utils';
 import { addToCartSchema } from '@/lib/validation';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 // GET /api/cart - Get current user's cart
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
   try {
     // Try to get authenticated user
     const session = await getServerSession();

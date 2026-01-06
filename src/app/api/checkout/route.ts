@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-config';
 import { prisma } from '@/lib/db';
+import { checkoutRateLimit } from '@/lib/rate-limit';
 
 const checkoutSchema = {
   shippingAddress: {
@@ -18,6 +19,10 @@ const checkoutSchema = {
 };
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const rateLimitResult = await checkoutRateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
   try {
     const session = await getServerSession(authOptions);
     

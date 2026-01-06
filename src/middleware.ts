@@ -1,5 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import { addSecurityHeaders } from '@/lib/security-headers';
 
 export default withAuth(
   function middleware(req) {
@@ -11,7 +12,9 @@ export default withAuth(
       return NextResponse.redirect(new URL('/', req.url));
     }
 
-    return NextResponse.next();
+    // Add security headers to response
+    const response = NextResponse.next();
+    return addSecurityHeaders(response);
   },
   {
     callbacks: {

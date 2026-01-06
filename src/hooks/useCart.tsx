@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 
 interface CartItem {
@@ -35,11 +36,29 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const fetcher = (url: string) => fetch(url).then((res) => res.json()).then((json) => json.data?.cart || null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
   const { data: cart, error, mutate } = useSWR<Cart>('/api/cart', fetcher, {
     revalidateOnFocus: false,
     dedupingInterval: 2000,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [previousSessionState, setPreviousSessionState] = useState<string | null>(null);
+
+  // Watch for logout and clear cart
+  useEffect(() => {
+    if (status === 'loading') return;
+    
+    const currentSessionState = session?.user?.email || null;
+    
+    // If user was logged in and now is logged out, clear the cart
+    if (previousSessionState && !currentSessionState) {
+      mutate(null, false);
+      // Also clear the session cookie by calling the cart endpoint
+      fetch('/api/cart/clear', { method: 'POST' }).catch(() => {});
+    }
+    
+    setPreviousSessionState(currentSessionState);
+  }, [session, status, previousSessionState, mutate]);
 
   const addToCart = async (productId: string, quantity: number) => {
     try {

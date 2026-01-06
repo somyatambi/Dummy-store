@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) return rateLimitResult;
+
   try {
     const body = await request.json();
     const { productId, quantity = 1 } = body;
